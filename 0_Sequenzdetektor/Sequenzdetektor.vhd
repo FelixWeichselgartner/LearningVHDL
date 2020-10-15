@@ -14,6 +14,7 @@ end sequence_detector;
 
 architecture arch of sequence_detector is
     signal sequence : std_logic_vector(2 downto 0) := "000";
+    signal q: std_logic := '0';
 begin
 	
 	-- combinational logic
@@ -22,15 +23,14 @@ begin
         sequence <= x & sequence(2) & sequence(1);
 
         if sequence = "010" then
-            y <= '1';
+            q <= '1';
         else
-            y <= '0';
+            q <= '0';
         end if;
-        
-        current_seq <= sequence;
     end process;
     
-    
+    current_seq <= sequence;
+    y <= q;
 
 end arch;
 

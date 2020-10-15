@@ -32,8 +32,9 @@ architecture Behavioral of tb_sequence_detector is
 
     constant T : time := 10 ns; -- clock period
 
-    signal x, y, clk : std_logic;
+    signal x, clk : std_logic;
     signal sequence : std_logic_vector(15 downto 0) := "0101010101010101"; --"1011101110101110";
+    signal y : std_logic;
     signal current_seq: std_logic_vector (2 downto 0));
 
     component sequence_detector is
@@ -64,9 +65,11 @@ begin
     process
         variable i: unsigned(0 to 15);
     begin
+        x <= '0';
+    
         for i in 0 to 15 loop
             x <= sequence(i);
-            wait for 1ns;
+            wait for T;
                 
             --assert y = 
             --report "value is not correct." 
