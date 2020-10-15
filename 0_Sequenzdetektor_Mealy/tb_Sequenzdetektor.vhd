@@ -29,12 +29,14 @@ entity tb_sequence_detector is
 end tb_sequence_detector;
 
 architecture Behavioral of tb_sequence_detector is
-
+--"0101010101010101"; --
     constant T : time := 10 ns; -- clock period
 
     signal x, clock : std_logic;
-    signal sequence : std_logic_vector(15 downto 0) := "0101010101010101"; --"1011101110101110";
+    signal sequence : std_logic_vector(15 downto 0) :=       "1011101110101110";
+    signal sequence_check : std_logic_vector(15 downto 0) := "0000001000000000";
     signal y_q : std_logic;
+    signal dummy: std_logic;
 
     component Sequenzdetektor is
     port   (clock        : in std_logic;
@@ -66,10 +68,11 @@ begin
         for i in 0 to 15 loop
             wait until rising_edge(clock);
             x <= sequence(i);
-                
-            --assert y_q = 
-            --report "value is not correct." 
-            --severity FAILURE;
+            dummy <= sequence_check(i);
+            
+            assert y_q = dummy
+            report "value is not correct." 
+            severity ERROR;
         end loop;
         wait;
     end process;
