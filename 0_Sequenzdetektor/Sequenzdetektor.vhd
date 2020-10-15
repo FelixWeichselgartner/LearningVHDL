@@ -1,42 +1,42 @@
 
-library ieee;
-use ieee.std_logic_1164.all;	 -- to use std_logic / std_logic_vector
-use ieee.numeric_std.all;		 -- to use arithmetic functions
-use ieee.std_logic_unsigned.all; -- add std_logic_vectors
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL; -- to use std_logic / std_logic_vector
+USE ieee.numeric_std.ALL; -- to use arithmetic functions
+USE ieee.std_logic_unsigned.ALL; -- add std_logic_vectors
 
-entity sequence_detector is
+ENTITY sequence_detector IS
     -- all ports of type std_logic / std_logic_vector
-	port(x :   in std_logic;
-	     clk : in std_logic;
-         y :   out std_logic;
-         current_seq: out std_logic_vector (2 downto 0));
-end sequence_detector;
+    PORT (
+        x : IN std_logic;
+        clk : IN std_logic;
+        y : OUT std_logic;
+        current_seq : OUT std_logic_vector (2 DOWNTO 0));
+END sequence_detector;
 
-architecture arch of sequence_detector is
-    signal sequence : std_logic_vector(2 downto 0) := "000";
-    signal q: std_logic := '0';
-begin
-	
-	-- sequential logic
-    process (clk)
-    begin
-        if rising_edge(clk) then
-            sequence <= x & sequence(2) & sequence(1);
-        end if;
-    end process;
-    
+ARCHITECTURE arch OF sequence_detector IS
+    SIGNAL SEQUENCE : std_logic_vector(2 DOWNTO 0) := "000";
+    SIGNAL q : std_logic := '0';
+BEGIN
+
+    -- sequential logic
+    PROCESS (clk)
+    BEGIN
+        IF rising_edge(clk) THEN
+            SEQUENCE <= x & SEQUENCE(2) & SEQUENCE(1);
+        END IF;
+    END PROCESS;
+
     -- combinational logic
-    process (sequence)
-    begin
-        if sequence = "010" then
+    PROCESS (SEQUENCE)
+    BEGIN
+        IF SEQUENCE = "010" THEN
             y <= '1';
-        else
+        ELSE
             y <= '0';
-        end if;
-    end process;
-    
-    current_seq <= sequence;
+        END IF;
+    END PROCESS;
+
+    current_seq <= SEQUENCE;
     -- y <= q;
 
-end arch;
-
+END arch;

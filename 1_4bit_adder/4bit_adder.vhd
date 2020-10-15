@@ -1,29 +1,29 @@
 
-library ieee;
-use ieee.std_logic_1164.all;	 -- to use std_logic / std_logic_vector
-use ieee.numeric_std.all;		 -- to use arithmetic functions
-use ieee.std_logic_unsigned.all; -- add std_logic_vectors
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL; -- to use std_logic / std_logic_vector
+USE ieee.numeric_std.ALL; -- to use arithmetic functions
+USE ieee.std_logic_unsigned.ALL; -- add std_logic_vectors
 
-entity adder is
+ENTITY adder IS
     -- all ports of type std_logic / std_logic_vector
-	port(a : in std_logic_vector(3 downto 0);
-	     b : in std_logic_vector(3 downto 0);
-         Q : out std_logic_vector(3 downto 0);
-         c : out std_logic);
-end adder;
+    PORT (
+        a : IN std_logic_vector(3 DOWNTO 0);
+        b : IN std_logic_vector(3 DOWNTO 0);
+        Q : OUT std_logic_vector(3 DOWNTO 0);
+        c : OUT std_logic);
+END adder;
 
-architecture arch of adder is
-    signal sum : std_logic_vector(4 downto 0);
-begin
-	
-	-- combinational logic
-    process (a, b)
-    begin
+ARCHITECTURE arch OF adder IS
+    SIGNAL sum : std_logic_vector(4 DOWNTO 0);
+BEGIN
+
+    -- combinational logic
+    PROCESS (a, b)
+    BEGIN
         sum <= ('0' & a) + ('0' & b);
-    end process;
-    
+    END PROCESS;
+
     c <= sum(4);
-    Q <= sum(3 downto 0);
+    Q <= sum(3 DOWNTO 0);
 
-end arch;
-
+END arch;

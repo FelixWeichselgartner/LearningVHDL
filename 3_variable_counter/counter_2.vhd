@@ -1,67 +1,67 @@
 
-library ieee;
-use ieee.std_logic_1164.all;	-- to use std_logic / std_logic_vector
-use ieee.numeric_std.all;		-- to use arithmetic functions
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL; -- to use std_logic / std_logic_vector
+USE ieee.numeric_std.ALL; -- to use arithmetic functions
 
-entity counter_2 is
+ENTITY counter_2 IS
     -- all ports of type std_logic / std_logic_vector
-	port(CLK, CLR, EN : in std_logic;
-	     dir : std_logic; -- 0: count down 1: count up
-	     max : in std_logic_vector(3 downto 0); -- max value for counter
-         Q : out std_logic_vector(3 downto 0));
-end counter_2;
+    PORT (
+        CLK, CLR, EN : IN std_logic;
+        dir : std_logic; -- 0: count down 1: count up
+        max : IN std_logic_vector(3 DOWNTO 0); -- max value for counter
+        Q : OUT std_logic_vector(3 DOWNTO 0));
+END counter_2;
 
-architecture archi of counter_2 is
+ARCHITECTURE archi OF counter_2 IS
     -- internal signals of type unsigned for arithmetic operations
-	signal count, count_next: unsigned(3 downto 0);
-begin
-	
-	-- combinational logic
-    process (count, dir)
-    begin
-        if dir = '1' then
+    SIGNAL count, count_next : unsigned(3 DOWNTO 0);
+BEGIN
+
+    -- combinational logic
+    PROCESS (count, dir)
+    BEGIN
+        IF dir = '1' THEN
             count_next <= count + 1;
-            
-            if (count = unsigned(max) - 1) then
+
+            IF (count = unsigned(max) - 1) THEN
                 count_next <= "0000";
-            end if;
-        else
+            END IF;
+        ELSE
             count_next <= count - 1;
-            
+
             -- not clearly described how it should work
-            if (count = "0000") then
+            IF (count = "0000") THEN
                 count_next <= unsigned(max) - 1;
-            end if;
-        end if;
-        
+            END IF;
+        END IF;
+
         -- remove dir switching artefacts
         --if rising_edge(dir) then
         --    count_next <= "0000";
         --elsif falling_edge(dir) then
         --   count_next <= unsigned(max) - 1;
         --end if;
-    end process;
+    END PROCESS;
 
-	-- sequential logic
-    process (CLK, CLR)
-    begin
-        if (CLR='1') then -- asynchronous reset
-            if dir = '1' then
+    -- sequential logic
+    PROCESS (CLK, CLR)
+    BEGIN
+        IF (CLR = '1') THEN -- asynchronous reset
+            IF dir = '1' THEN
                 count <= "0000";
-            else
+            ELSE
                 count <= unsigned(max) - 1;
-            end if;
-        elsif (rising_edge(CLK)) then
-            if (EN='1') then
-                count <= count_next after 1 ns; -- after statement is ignored during synthesis
-											    -- but simulation waveform clearer
---              count <= count_next;
-          end if;
-        end if;
-    end process;
+            END IF;
+        ELSIF (rising_edge(CLK)) THEN
+            IF (EN = '1') THEN
+                count <= count_next AFTER 1 ns; -- after statement is ignored during synthesis
+                -- but simulation waveform clearer
+                --              count <= count_next;
+            END IF;
+        END IF;
+    END PROCESS;
 
-	-- output assignment
+    -- output assignment
     Q <= std_logic_vector(count); -- conversion function required
 
-end archi;
-
+END archi;

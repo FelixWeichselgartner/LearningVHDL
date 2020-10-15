@@ -1,44 +1,44 @@
 
-library ieee;
-use ieee.std_logic_1164.all;	-- to use std_logic / std_logic_vector
-use ieee.numeric_std.all;		-- to use arithmetic functions
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL; -- to use std_logic / std_logic_vector
+USE ieee.numeric_std.ALL; -- to use arithmetic functions
 
-entity counter_1 is
+ENTITY counter_1 IS
     -- all ports of type std_logic / std_logic_vector
-	port(CLK, CLR, EN : in std_logic;
-         Q : out std_logic_vector(3 downto 0));
-end counter_1;
+    PORT (
+        CLK, CLR, EN : IN std_logic;
+        Q : OUT std_logic_vector(3 DOWNTO 0));
+END counter_1;
 
-architecture archi of counter_1 is
+ARCHITECTURE archi OF counter_1 IS
     -- internal signals of type unsigned for arithmetic operations
-	signal count, count_next: unsigned(3 downto 0);
-begin
-	
-	-- combinational logic
-    process (count)
-    begin
+    SIGNAL count, count_next : unsigned(3 DOWNTO 0);
+BEGIN
+
+    -- combinational logic
+    PROCESS (count)
+    BEGIN
         count_next <= count + 1;
-        if (count = "1011") then
-          count_next <= "0000";
-        end if;
-    end process;
+        IF (count = "1011") THEN
+            count_next <= "0000";
+        END IF;
+    END PROCESS;
 
-	-- sequential logic
-    process (CLK, CLR)
-    begin
-        if (CLR='1') then -- asynchronous reset
+    -- sequential logic
+    PROCESS (CLK, CLR)
+    BEGIN
+        IF (CLR = '1') THEN -- asynchronous reset
             count <= "0000";
-        elsif (rising_edge(CLK)) then
-          if (EN='1') then
-            count <= count_next after 1 ns; -- after statement is ignored during synthesis
-											-- but simulation waveform clearer
---            count <= count_next;
-          end if;
-        end if;
-    end process;
+        ELSIF (rising_edge(CLK)) THEN
+            IF (EN = '1') THEN
+                count <= count_next AFTER 1 ns; -- after statement is ignored during synthesis
+                -- but simulation waveform clearer
+                --            count <= count_next;
+            END IF;
+        END IF;
+    END PROCESS;
 
-	-- output assignment
+    -- output assignment
     Q <= std_logic_vector(count); -- conversion function required
 
-end archi;
-
+END archi;

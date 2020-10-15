@@ -17,64 +17,63 @@
 -- Additional Comments:
 --
 ----------------------------------------------------------------------------------
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+USE IEEE.NUMERIC_STD.ALL;
+USE ieee.std_logic_unsigned.ALL;
 
+ENTITY tb_sequence_detector IS
+    --  Port ( );
+END tb_sequence_detector;
 
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.NUMERIC_STD.ALL;
-use ieee.std_logic_unsigned.all;
+ARCHITECTURE Behavioral OF tb_sequence_detector IS
 
-entity tb_sequence_detector is
---  Port ( );
-end tb_sequence_detector;
+    CONSTANT T : TIME := 10 ns; -- clock period
 
-architecture Behavioral of tb_sequence_detector is
+    SIGNAL x, clk : std_logic;
+    SIGNAL SEQUENCE : std_logic_vector(15 DOWNTO 0) := "0101010101010101"; --"1011101110101110";
+    SIGNAL y : std_logic;
+    SIGNAL current_seq : std_logic_vector (2 DOWNTO 0);
 
-    constant T : time := 10 ns; -- clock period
+    COMPONENT sequence_detector IS
+        PORT (
+            x : IN std_logic;
+            clk : IN std_logic;
+            y : OUT std_logic;
+            current_seq : OUT std_logic_vector (2 DOWNTO 0)
+        );
+    END COMPONENT;
 
-    signal x, clk : std_logic;
-    signal sequence : std_logic_vector(15 downto 0) := "0101010101010101"; --"1011101110101110";
-    signal y : std_logic;
-    signal current_seq : std_logic_vector (2 downto 0);
-
-    component sequence_detector is
-	port(x :   in std_logic;
-	     clk : in std_logic;
-         y :   out std_logic;
-         current_seq: out std_logic_vector (2 downto 0)
-         );
-    end component;
-
-begin
+BEGIN
 
     dut : sequence_detector
-    port map (
-       x => x, y => y, clk => clk, current_seq => current_seq
+    PORT MAP(
+        x => x, y => y, clk => clk, current_seq => current_seq
     );
-    
+
     -- continuous clock
-    process
-    begin
+    PROCESS
+    BEGIN
         clk <= '0';
-        wait for T/2;
+        WAIT FOR T/2;
         clk <= '1';
-        wait for T/2;
-    end process;
+        WAIT FOR T/2;
+    END PROCESS;
 
     -- test procedure
-    process
-        variable i: unsigned(0 to 15);
-    begin
+    PROCESS
+        VARIABLE i : unsigned(0 TO 15);
+    BEGIN
         x <= '0';
-        for i in 0 to 15 loop
-            wait until rising_edge(clk);
-            x <= sequence(i);
-                
+        FOR i IN 0 TO 15 LOOP
+            WAIT UNTIL rising_edge(clk);
+            x <= SEQUENCE(i);
+
             --assert y = 
             --report "value is not correct." 
             --severity FAILURE;
-        end loop;
-        wait;
-    end process;
+        END LOOP;
+        WAIT;
+    END PROCESS;
 
-end Behavioral;
+END Behavioral;

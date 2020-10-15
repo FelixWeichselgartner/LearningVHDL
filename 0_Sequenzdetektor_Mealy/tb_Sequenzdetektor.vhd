@@ -17,67 +17,66 @@
 -- Additional Comments:
 --
 ----------------------------------------------------------------------------------
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+USE IEEE.NUMERIC_STD.ALL;
+USE ieee.std_logic_unsigned.ALL;
 
+ENTITY tb_sequence_detector IS
+    --  Port ( );
+END tb_sequence_detector;
 
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.NUMERIC_STD.ALL;
-use ieee.std_logic_unsigned.all;
+ARCHITECTURE Behavioral OF tb_sequence_detector IS
+    --"0101010101010101"; --
+    CONSTANT T : TIME := 10 ns; -- clock period
 
-entity tb_sequence_detector is
---  Port ( );
-end tb_sequence_detector;
+    SIGNAL x, clock : std_logic;
+    SIGNAL SEQUENCE : std_logic_vector(15 DOWNTO 0) := "1011101110101110";
+    SIGNAL sequence_check : std_logic_vector(15 DOWNTO 0) := "0000001000000000";
+    SIGNAL y_q : std_logic;
+    SIGNAL a_rst : std_logic;
+    SIGNAL dummy : std_logic;
 
-architecture Behavioral of tb_sequence_detector is
---"0101010101010101"; --
-    constant T : time := 10 ns; -- clock period
+    COMPONENT Sequenzdetektor IS
+        PORT (
+            clock : IN std_logic;
+            x : IN std_logic;
+            a_rst : IN std_logic;
+            y_q : OUT std_logic);
+    END COMPONENT;
 
-    signal x, clock : std_logic;
-    signal sequence : std_logic_vector(15 downto 0) :=       "1011101110101110";
-    signal sequence_check : std_logic_vector(15 downto 0) := "0000001000000000";
-    signal y_q : std_logic;
-    signal a_rst: std_logic;
-    signal dummy: std_logic;
-
-    component Sequenzdetektor is
-    port   (clock        : in std_logic;
-            x            : in std_logic;
-            a_rst        : in std_logic;
-            y_q          : out std_logic);
-    end component;
-
-begin
+BEGIN
 
     dut : Sequenzdetektor
-    port map (
-       x => x, y_q => y_q, clock => clock, a_rst => a_rst
+    PORT MAP(
+        x => x, y_q => y_q, clock => clock, a_rst => a_rst
     );
-    
+
     -- continuous clock
-    process
-    begin
+    PROCESS
+    BEGIN
         clock <= '0';
-        wait for T/2;
+        WAIT FOR T/2;
         clock <= '1';
-        wait for T/2;
-    end process;
+        WAIT FOR T/2;
+    END PROCESS;
 
     -- test procedure
-    process
-        variable i: unsigned(0 to 15);
-    begin
+    PROCESS
+        VARIABLE i : unsigned(0 TO 15);
+    BEGIN
         a_rst <= '0';
         x <= '0';
-        for i in 0 to 15 loop
-            wait until rising_edge(clock);
-            x <= sequence(i);
+        FOR i IN 0 TO 15 LOOP
+            WAIT UNTIL rising_edge(clock);
+            x <= SEQUENCE(i);
             dummy <= sequence_check(i);
-            
-            assert y_q = dummy
-            report "value is not correct." 
-            severity ERROR;
-        end loop;
-        wait;
-    end process;
 
-end Behavioral;
+            ASSERT y_q = dummy
+            REPORT "value is not correct."
+                SEVERITY ERROR;
+        END LOOP;
+        WAIT;
+    END PROCESS;
+
+END Behavioral;
