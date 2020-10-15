@@ -17,20 +17,26 @@ architecture arch of sequence_detector is
     signal q: std_logic := '0';
 begin
 	
-	-- combinational logic
+	-- sequential logic
     process (clk)
     begin
-        sequence <= x & sequence(2) & sequence(1);
-
+        if rising_edge(clk) then
+            sequence <= x & sequence(2) & sequence(1);
+        end if;
+    end process;
+    
+    -- combinational logic
+    process (sequence)
+    begin
         if sequence = "010" then
-            q <= '1';
+            y <= '1';
         else
-            q <= '0';
+            y <= '0';
         end if;
     end process;
     
     current_seq <= sequence;
-    y <= q;
+    -- y <= q;
 
 end arch;
 
