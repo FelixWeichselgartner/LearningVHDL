@@ -18,7 +18,7 @@ begin
     process (count)
     begin
         count_next <= count + 1;
-        if (count = "1100") then
+        if (count = "1011") then
           count_next <= "0000";
         end if;
     end process;
