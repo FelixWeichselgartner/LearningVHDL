@@ -37,17 +37,17 @@ ARCHITECTURE Behavioral OF tb_counter_2 IS
 
     CONSTANT T : TIME := 20 ns; -- clock period
 
-    SIGNAL clk, clr, en : std_logic; -- input
-    SIGNAL dir : std_logic_vector(1 DOWNTO 0);
-    SIGNAL max : std_logic_vector(3 DOWNTO 0);
-    SIGNAL q : std_logic_vector(3 DOWNTO 0);
+    SIGNAL clk, clr, en : STD_LOGIC; -- input
+    SIGNAL dir : STD_LOGIC_VECTOR(1 DOWNTO 0);
+    SIGNAL max : STD_LOGIC_VECTOR(3 DOWNTO 0);
+    SIGNAL q : STD_LOGIC_VECTOR(3 DOWNTO 0);
 
     COMPONENT counter_2 IS
         PORT (
-            CLK, CLR, EN : IN std_logic;
-            dir : std_logic_vector(1 DOWNTO 0); -- 0: count down 1: count up
-            max : IN std_logic_vector(3 DOWNTO 0); -- max value for counter
-            Q : OUT std_logic_vector(3 DOWNTO 0));
+            CLK, CLR, EN : IN STD_LOGIC;
+            dir : STD_LOGIC_VECTOR(1 DOWNTO 0); -- 0: count down 1: count up
+            max : IN STD_LOGIC_VECTOR(3 DOWNTO 0); -- max value for counter
+            Q : OUT STD_LOGIC_VECTOR(3 DOWNTO 0));
     END COMPONENT;
 
 BEGIN
@@ -90,7 +90,7 @@ BEGIN
         en <= '1' AFTER 1 ns;
         FOR i IN 0 TO 11 LOOP
             WAIT UNTIL rising_edge(clk);
-            ASSERT q = std_logic_vector(TO_UNSIGNED(i, 4)) -- convert integer (i) to 1. to Unsigned
+            ASSERT q = STD_LOGIC_VECTOR(TO_UNSIGNED(i, 4)) -- convert integer (i) to 1. to Unsigned
             REPORT "Counter value is not correct." --                        2. to std_logic_vector
                 SEVERITY FAILURE;
         END LOOP;
@@ -107,11 +107,11 @@ BEGIN
         en <= '1' AFTER 1 ns;
         FOR i IN 11 DOWNTO 0 LOOP
             WAIT UNTIL rising_edge(clk);
-            ASSERT q = std_logic_vector(TO_UNSIGNED(i, 4)) -- convert integer (i) to 1. to Unsigned
+            ASSERT q = STD_LOGIC_VECTOR(TO_UNSIGNED(i, 4)) -- convert integer (i) to 1. to Unsigned
             REPORT "Counter value is not correct." --                        2. to std_logic_vector
                 SEVERITY FAILURE;
         END LOOP;
-        
+
         -- test mode 00
         en <= '0';
         dir <= "00";
@@ -122,13 +122,13 @@ BEGIN
             WAIT UNTIL rising_edge(clk);
         END LOOP;
         en <= '1' AFTER 1 ns;
-        FOR i IN 11 TO 0 LOOP
+        FOR i IN 11 DOWNTO 0 LOOP
             WAIT UNTIL rising_edge(clk);
-            ASSERT q = std_logic_vector(TO_UNSIGNED(i, 4)) -- convert integer (i) to 1. to Unsigned
+            ASSERT q = STD_LOGIC_VECTOR(TO_UNSIGNED(0, 4)) -- convert integer (i) to 1. to Unsigned
             REPORT "Counter value is not correct." --                        2. to std_logic_vector
                 SEVERITY FAILURE;
         END LOOP;
-        
+
         -- test mode 11
         en <= '0';
         dir <= "11";
@@ -142,7 +142,7 @@ BEGIN
         en <= '1' AFTER 1 ns;
         FOR i IN 0 TO 11 LOOP
             WAIT UNTIL rising_edge(clk);
-            ASSERT q = std_logic_vector(TO_UNSIGNED(i * 3, 4)) -- convert integer (i) to 1. to Unsigned
+            ASSERT q = STD_LOGIC_VECTOR(TO_UNSIGNED(i * 3, 4)) -- convert integer (i) to 1. to Unsigned
             REPORT "Counter value is not correct." --                        2. to std_logic_vector
                 SEVERITY ERROR;
         END LOOP;

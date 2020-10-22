@@ -6,14 +6,14 @@ USE ieee.numeric_std.ALL; -- to use arithmetic functions
 ENTITY counter_2 IS
     -- all ports of type std_logic / std_logic_vector
     PORT (
-        CLK, CLR, EN : IN std_logic;
-         -- 00: dont count
-         -- 01: count up
-         -- 10: count down
-         -- 11: count up by 3
-        dir : std_logic_vector(1 DOWNTO 0);
-        max : IN std_logic_vector(3 DOWNTO 0); -- max value for counter
-        Q : OUT std_logic_vector(3 DOWNTO 0));
+        CLK, CLR, EN : IN STD_LOGIC;
+        -- 00: dont count
+        -- 01: count up
+        -- 10: count down
+        -- 11: count up by 3
+        dir : STD_LOGIC_VECTOR(1 DOWNTO 0);
+        max : IN STD_LOGIC_VECTOR(3 DOWNTO 0); -- max value for counter
+        Q : OUT STD_LOGIC_VECTOR(3 DOWNTO 0));
 END counter_2;
 
 ARCHITECTURE archi OF counter_2 IS
@@ -33,14 +33,14 @@ BEGIN
         -- dont count
         IF dir = "00" THEN
             count_next <= count;
-        -- count up
+            -- count up
         ELSIF dir = "01" THEN
             count_next <= count + 1;
 
             IF (count = unsigned(max) - 1) THEN
                 count_next <= "0000";
             END IF;
-        -- count down
+            -- count down
         ELSIF dir = "10" THEN
             count_next <= count - 1;
 
@@ -48,7 +48,7 @@ BEGIN
             IF (count = "0000") THEN
                 count_next <= unsigned(max) - 1;
             END IF;
-        -- count up by 3
+            -- count up by 3
         ELSIF dir = "11" THEN
             count_next <= count + 3;
 
@@ -70,12 +70,12 @@ BEGIN
     BEGIN
         IF (CLR = '1') THEN -- asynchronous reset
             -- dont up or count up by 3
-            IF (dir = "01" or dir = "11") THEN
+            IF (dir = "01" OR dir = "11") THEN
                 count <= "0000";
-            -- count down
+                -- count down
             ELSIF dir = "10" THEN
                 count <= unsigned(max) - 1;
-            -- dont count -> not specified what to do
+                -- dont count -> not specified what to do
             ELSIF dir = "00" THEN
                 count <= "0000";
             END IF;
@@ -89,6 +89,6 @@ BEGIN
     END PROCESS;
 
     -- output assignment
-    Q <= std_logic_vector(count); -- conversion function required
+    Q <= STD_LOGIC_VECTOR(count); -- conversion function required
 
 END archi;
