@@ -6,7 +6,7 @@ USE ieee.numeric_std.ALL; -- to use arithmetic functions
 ENTITY counter_2 IS
     -- all ports of type std_logic / std_logic_vector
     PORT (
-        CLK, CLR, EN : IN STD_LOGIC;
+        SCLR, ACLR, CLK, EN : IN STD_LOGIC;
         -- 00: dont count
         -- 01: count up
         -- 10: count down
@@ -21,14 +21,8 @@ ARCHITECTURE archi OF counter_2 IS
     SIGNAL count, count_next : unsigned(3 DOWNTO 0);
 BEGIN
 
-    -- if the max value is changed reset the counter;
-    PROCESS (max)
-    BEGIN
-        -- behaviour for changing max
-    END PROCESS;
-
     -- combinational logic
-    PROCESS (count, dir)
+    PROCESS (count, dir, max, sclr)
     BEGIN
         -- dont count
         IF dir = "00" THEN
@@ -55,35 +49,41 @@ BEGIN
             IF (count >= unsigned(max) - 3) THEN
                 count_next <= unsigned(max) - count;
             END IF;
+        ELSE
+            count_next <= "0000";
         END IF;
 
-        -- remove dir switching artefacts
-        --if rising_edge(dir) then
-        --    count_next <= "0000";
-        --elsif falling_edge(dir) then
-        --   count_next <= unsigned(max) - 1;
-        --end if;
+        IF (sclr = '1') THEN -- synchronous reset
+            count_next <= "0000";
+            -- dont up or count up by 3
+            IF (dir = "01" OR dir = "11") THEN
+                count_next <= "0000";
+                -- count down
+            ELSIF dir = "10" THEN
+                count_next <= unsigned(max) - 1;
+                -- dont count -> not specified what to do
+            ELSIF dir = "00" THEN
+                count_next <= "0000";
+            END IF;
+        END IF;
+
     END PROCESS;
 
     -- sequential logic
-    PROCESS (CLK, CLR)
+    PROCESS (CLK, ACLR)
     BEGIN
-        IF (CLR = '1') THEN -- asynchronous reset
-            -- dont up or count up by 3
-            IF (dir = "01" OR dir = "11") THEN
-                count <= "0000";
-                -- count down
-            ELSIF dir = "10" THEN
-                count <= unsigned(max) - 1;
-                -- dont count -> not specified what to do
-            ELSIF dir = "00" THEN
-                count <= "0000";
-            END IF;
+        IF (ACLR = '1') THEN -- asynchronous reset
+            count <= "0000";
         ELSIF (rising_edge(CLK)) THEN
             IF (EN = '1') THEN
                 count <= count_next AFTER 1 ns; -- after statement is ignored during synthesis
                 -- but simulation waveform clearer
                 --              count <= count_next;
+            ELSE
+            -- synchronous reset also works if not enabled
+                IF (SCLR = '1') THEN
+                    count <= count_next AFTER 1 ns;
+                    END IF;
             END IF;
         END IF;
     END PROCESS;
