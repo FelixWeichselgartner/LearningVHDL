@@ -49,6 +49,7 @@ BEGIN
         IF (CLR = '1') THEN -- asynchronous reset
             IF dir = '1' THEN
                 count <= "0000";
+            -- END IF; here should be no logic => removed in 6_variable_counter_more_nodes
             ELSE
                 count <= unsigned(max) - 1;
             END IF;
