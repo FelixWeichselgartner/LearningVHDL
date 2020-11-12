@@ -69,12 +69,15 @@ BEGIN
     PROCESS
         VARIABLE i, l : unsigned(7 DOWNTO 0);
     BEGIN
+        rst <= '1';
+        start_puls <= '0';
         a <= x"00";
         b <= x"00";
+        WAIT FOR T;
         rst <= '0';
 
         FOR i IN 5 TO 10 LOOP
-            FOR l IN 10 TO 12 LOOP
+            FOR l IN 11 TO 12 LOOP
                 a <= STD_LOGIC_VECTOR(TO_UNSIGNED(i, 8));
                 b <= STD_LOGIC_VECTOR(TO_UNSIGNED(l, 8));
                 res <= STD_LOGIC_VECTOR(TO_UNSIGNED(i, 8) * TO_UNSIGNED(l, 8));
