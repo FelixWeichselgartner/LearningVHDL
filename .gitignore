@@ -1,3 +1,4 @@
 *.txt
 *.png
 *.xdc
+12_ram/tb_memory.vhd
