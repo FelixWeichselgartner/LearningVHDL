@@ -36,15 +36,22 @@ BEGIN
         -- subtraction
         IF (m = '0') THEN
             number2 := - number2;
+            
+            -- number is positive
+            IF number2(7) = 0 then
+            end if;
         END IF;
 
         -- addition
         result := (number1(7) & number1) + (number2(7) & number2);
-        c <= result(8);
-        IF (result < 0) THEN
-            s <= '1';
-        END IF;
+        
+        -- overflow
+        
+        
+        -- signed
+        s <= result(8);
 
+        -- zero
         IF result(7 DOWNTO 0) = x"00" THEN
             zero <= '1';
         END IF;
