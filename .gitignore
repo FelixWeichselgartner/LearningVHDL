@@ -3,3 +3,4 @@
 *.xdc
 12_ram/tb_memory.vhd
 13_pipeline_mul/TB_Multiplizierer_C.vhd
+14_vga/tb_vga_ctrl.vhd
